@@ -27,7 +27,7 @@
                 <input id="email-address" type="text" readonly 
                     class="w-full p-3 bg-gray-50 border rounded-lg text-blue-600 font-medium focus:outline-none"
                     value="Đang tạo email...">
-                <button onclick="copyEmail()" class="bg-green-500 text-white p-3 rounded-lg hover:bg-green-600">
+                <button onclick="copyEmail()" class="bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition active:scale-95">
                     <i class="fas fa-copy"></i>
                 </button>
             </div>
@@ -40,12 +40,19 @@
                 <h2 class="font-bold text-gray-700"><i class="fas fa-inbox mr-2"></i>Hộp thư đến</h2>
             </div>
             <div id="messages-list" class="divide-y divide-gray-200">
-                <!-- Tin nhắn sẽ xuất hiện ở đây -->
                 <div class="p-8 text-center text-gray-400">
                     <i class="fas fa-spinner fa-spin text-3xl mb-2"></i>
                     <p>Đang chờ thư mới...</p>
                 </div>
             </div>
+        </div>
+
+        <!-- Nút Hỗ trợ & Báo lỗi (Đã được gắn đúng vị trí) -->
+        <div class="text-center mt-8 pb-10">
+            <a href="support.html" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition duration-200">
+                <i class="fas fa-info-circle mr-2"></i>
+                <span>Báo lỗi hoặc Cần hỗ trợ?</span>
+            </a>
         </div>
     </div>
 
@@ -55,69 +62,76 @@
 
         // 1. Tạo tài khoản ngẫu nhiên
         async function createAccount() {
-            const domainRes = await fetch(`${API_URL}/domains`);
-            const domains = await domainRes.json();
-            const domain = domains['hydra:member'][0].domain;
-            
-            const address = `user${Math.random().toString(36).substring(7)}@${domain}`;
-            const password = 'password123';
+            try {
+                const domainRes = await fetch(`${API_URL}/domains`);
+                const domains = await domainRes.json();
+                const domain = domains['hydra:member'][0].domain;
+                
+                const address = `user${Math.random().toString(36).substring(7)}@${domain}`;
+                const password = 'password123';
 
-            const res = await fetch(`${API_URL}/accounts`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ address, password })
-            });
+                const res = await fetch(`${API_URL}/accounts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ address, password })
+                });
 
-            const account = await res.json();
-            
-            // Lấy Token
-            const tokenRes = await fetch(`${API_URL}/token`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ address, password })
-            });
-            const tokenData = await tokenRes.json();
-            
-            currentAccount = { ...account, token: tokenData.token };
-            document.getElementById('email-address').value = address;
-            
-            // Bắt đầu kiểm tra thư
-            setInterval(fetchMessages, 5000);
+                const account = await res.json();
+                
+                const tokenRes = await fetch(`${API_URL}/token`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ address, password })
+                });
+                const tokenData = await tokenRes.json();
+                
+                currentAccount = { ...account, token: tokenData.token };
+                document.getElementById('email-address').value = address;
+                
+                setInterval(fetchMessages, 5000);
+            } catch (error) {
+                console.error("Lỗi tạo tài khoản:", error);
+                document.getElementById('email-address').value = "Lỗi kết nối API!";
+            }
         }
 
         // 2. Lấy danh sách tin nhắn
         async function fetchMessages() {
             if (!currentAccount) return;
             
-            const res = await fetch(`${API_URL}/messages`, {
-                headers: { 'Authorization': `Bearer ${currentAccount.token}` }
-            });
-            const data = await res.json();
-            const messages = data['hydra:member'];
-            
-            const list = document.getElementById('messages-list');
-            if (messages.length === 0) {
-                list.innerHTML = '<div class="p-8 text-center text-gray-400">Chưa có thư nào đến.</div>';
-                return;
-            }
+            try {
+                const res = await fetch(`${API_URL}/messages`, {
+                    headers: { 'Authorization': `Bearer ${currentAccount.token}` }
+                });
+                const data = await res.json();
+                const messages = data['hydra:member'];
+                
+                const list = document.getElementById('messages-list');
+                if (messages.length === 0) {
+                    list.innerHTML = '<div class="p-8 text-center text-gray-400">Chưa có thư nào đến.</div>';
+                    return;
+                }
 
-            list.innerHTML = messages.map(msg => `
-                <div class="p-4 hover:bg-blue-50 cursor-pointer transition">
-                    <div class="flex justify-between">
-                        <span class="font-bold text-blue-800">${msg.from.address}</span>
-                        <span class="text-xs text-gray-400">Vừa xong</span>
+                list.innerHTML = messages.map(msg => `
+                    <div class="p-4 hover:bg-blue-50 cursor-pointer transition border-l-4 border-transparent hover:border-blue-500">
+                        <div class="flex justify-between">
+                            <span class="font-bold text-blue-800 text-sm truncate">${msg.from.address}</span>
+                            <span class="text-[10px] text-gray-400 uppercase font-semibold">Vừa xong</span>
+                        </div>
+                        <div class="text-sm font-bold text-gray-900 mt-1">${msg.subject || '(Không có tiêu đề)'}</div>
+                        <div class="text-xs text-gray-500 truncate mt-1">${msg.intro}</div>
                     </div>
-                    <div class="text-sm font-medium text-gray-800 mt-1">${msg.subject}</div>
-                    <div class="text-xs text-gray-500 truncate">${msg.intro}</div>
-                </div>
-            `).join('');
+                `).join('');
+            } catch (error) {
+                console.error("Lỗi lấy tin nhắn:", error);
+            }
         }
 
         function copyEmail() {
             const emailInput = document.getElementById('email-address');
             emailInput.select();
             document.execCommand('copy');
-            alert('Đã sao chép địa chỉ email!');
+            alert('Đã sao chép địa chỉ email vào bộ nhớ tạm!');
         }
 
         createAccount();
