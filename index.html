@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5GSMS - Email Tạm Thời</title> <script src="https://cdn.tailwindcss.com"></script>
+    <title>5GSMS - Email Tạm Thời</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script type="module">
@@ -22,6 +23,7 @@
 
         onAuthStateChanged(auth, (user) => {
             if (!user) {
+                // Chuyển hướng về login nếu chưa đăng nhập
                 window.location.href = 'login.html';
             }
         });
@@ -48,10 +50,10 @@
 
     <div class="container mx-auto p-4 max-w-2xl">
         <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-            <label class="block text-gray-700 text-sm font-bold mb-2 text-blue-600 uppercase tracking-wide">Địa chỉ Email 5GSMS của bạn:</label>
+            <label class="block text-gray-700 text-sm font-bold mb-2 text-blue-600">Địa chỉ Email 5GSMS của bạn:</label>
             <div class="flex items-center space-x-2">
                 <input id="email-address" type="text" readonly class="w-full p-3 bg-gray-50 border rounded-lg text-blue-600 font-bold focus:outline-none" value="Đang tạo email...">
-                <button onclick="copyEmail()" class="bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition active:scale-95 shadow-sm">
+                <button onclick="copyEmail()" class="bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition active:scale-95">
                     <i class="fas fa-copy"></i>
                 </button>
             </div>
@@ -60,7 +62,6 @@
         <div class="bg-white rounded-xl shadow-md overflow-hidden border-t-4 border-blue-500">
             <div class="bg-gray-50 p-4 border-b text-gray-700 font-bold flex justify-between items-center">
                 <span><i class="fas fa-inbox mr-2"></i>Hộp thư đến</span>
-                <span class="text-xs font-normal text-gray-400 italic">Tự động làm mới</span>
             </div>
             <div id="messages-list" class="divide-y divide-gray-200">
                 <div class="p-8 text-center text-gray-400">
@@ -81,39 +82,61 @@
     <script>
         const API_URL = 'https://api.mail.tm';
         let currentAccount = null;
+
         async function createAccount() {
+            const display = document.getElementById('email-address');
             try {
                 const domainRes = await fetch(`${API_URL}/domains`);
                 const domains = await domainRes.json();
                 const domain = domains['hydra:member'][0].domain;
                 const address = `user${Math.random().toString(36).substring(7)}@${domain}`;
                 const password = 'password123';
-                const res = await fetch(`${API_URL}/accounts`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password })});
+
+                const res = await fetch(`${API_URL}/accounts`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ address, password })
+                });
+
+                if(!res.ok) throw new Error("Cố tạo lại...");
+
                 const account = await res.json();
-                const tokenRes = await fetch(`${API_URL}/token`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, password })});
+                const tokenRes = await fetch(`${API_URL}/token`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ address, password })
+                });
                 const tokenData = await tokenRes.json();
+
                 currentAccount = { ...account, token: tokenData.token };
-                document.getElementById('email-address').value = address;
+                display.value = address;
                 setInterval(fetchMessages, 5000);
-            } catch (e) { document.getElementById('email-address').value = "Lỗi API!"; }
+            } catch (e) { 
+                display.value = "Đang thử kết nối lại...";
+                setTimeout(createAccount, 3000); // Thử lại sau 3 giây nếu lỗi
+            }
         }
+
         async function fetchMessages() {
             if (!currentAccount) return;
-            const res = await fetch(`${API_URL}/messages`, { headers: { 'Authorization': `Bearer ${currentAccount.token}` }});
-            const data = await res.json();
-            const messages = data['hydra:member'];
-            const list = document.getElementById('messages-list');
-            if (messages.length === 0) { list.innerHTML = '<div class="p-8 text-center text-gray-400 italic">Chưa có thư nào đến.</div>'; return; }
-            list.innerHTML = messages.map(msg => `
-                <div class="p-4 hover:bg-blue-50 border-l-4 border-transparent hover:border-blue-500 transition">
-                    <div class="flex justify-between">
-                        <span class="font-bold text-blue-800 text-sm truncate">${msg.from.address}</span>
+            try {
+                const res = await fetch(`${API_URL}/messages`, { headers: { 'Authorization': `Bearer ${currentAccount.token}` }});
+                const data = await res.json();
+                const messages = data['hydra:member'];
+                const list = document.getElementById('messages-list');
+                if (messages.length === 0) { list.innerHTML = '<div class="p-8 text-center text-gray-400 italic">Chưa có thư nào đến.</div>'; return; }
+                list.innerHTML = messages.map(msg => `
+                    <div class="p-4 hover:bg-blue-50 border-l-4 border-transparent hover:border-blue-500 transition">
+                        <div class="flex justify-between">
+                            <span class="font-bold text-blue-800 text-sm truncate">${msg.from.address}</span>
+                        </div>
+                        <div class="text-sm font-bold text-gray-900 mt-1">${msg.subject || '(Không có tiêu đề)'}</div>
+                        <div class="text-xs text-gray-500 mt-1 truncate">${msg.intro}</div>
                     </div>
-                    <div class="text-sm font-bold text-gray-900 mt-1">${msg.subject || '(Không có tiêu đề)'}</div>
-                    <div class="text-xs text-gray-500 mt-1 truncate">${msg.intro}</div>
-                </div>
-            `).join('');
+                `).join('');
+            } catch (e) { console.log("Chưa có tin mới"); }
         }
+
         function copyEmail() { 
             const input = document.getElementById('email-address'); 
             input.select(); 
