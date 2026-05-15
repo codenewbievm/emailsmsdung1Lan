@@ -125,6 +125,7 @@ window.handleLogout=()=>signOut(auth).then(()=>location.href='login.html');
     <div class="erow">
       <input id="email-address" type="text" readonly class="einp" value="Đang kết nối hệ thống...">
       <button class="btn-cp" id="btn-cp" onclick="copyEmail()"><i class="fas fa-copy"></i></button>
+      <button class="btn-cp" id="btn-new" onclick="newEmail()" style="background:#0ea5e9" title="Đổi email mới"><i class="fas fa-arrows-rotate"></i></button>
     </div>
     <div class="ih">
       <div>
@@ -200,6 +201,22 @@ async function createAccount(){
     if(fi)clearInterval(fi);if(ci)clearInterval(ci);
     await fetchMsgs();startRefresh();
   }catch(e){el.value='Đang kết nối lại...';setTimeout(createAccount,3000)}
+}
+
+function newEmail(){
+  const b=document.getElementById('btn-new');
+  b.innerHTML='<i class="fas fa-spinner fa-spin"></i>';
+  b.disabled=true;
+  if(fi)clearInterval(fi);
+  if(ci)clearInterval(ci);
+  document.getElementById('email-address').value='Đang tạo email mới...';
+  document.getElementById('ml').innerHTML='<div class="empty"><i class="fas fa-spinner fa-spin"></i><p>Đang tạo địa chỉ mới...</p></div>';
+  acc=null;
+  createAccount().then(()=>{
+    b.innerHTML='<i class="fas fa-arrows-rotate"></i>';
+    b.disabled=false;
+    showToast('Đã tạo email mới!','fa-arrows-rotate');
+  });
 }
 
 function startRefresh(){
