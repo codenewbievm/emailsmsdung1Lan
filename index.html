@@ -468,7 +468,7 @@
 </div>
 
 <!-- ===== AI CHATBOX ===== -->
-<div id="chat-bubble" onclick="toggleChat()" title="Hỏi AI hỗ trợ">
+<div id="chat-bubble" title="Kéo để di chuyển · Nhấn để mở chat">
     <div class="chat-badge" id="chat-badge">1</div>
     <i class="fas fa-comment-dots" id="chat-icon"></i>
 </div>
@@ -824,7 +824,11 @@ async function sendChat() {
     try {
         const res = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'anthropic-dangerous-direct-browser-access': 'true',
+                'anthropic-version': '2023-06-01'
+            },
             body: JSON.stringify({
                 model: 'claude-sonnet-4-20250514',
                 max_tokens: 1000,
