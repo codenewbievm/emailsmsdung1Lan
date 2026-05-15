@@ -1,1024 +1,286 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-<title>5GSMS — Secure Temp Mail</title>
-
-<meta name="description" content="5GSMS - Hệ thống email tạm thời bảo mật cao">
-<meta property="og:title" content="5GSMS">
-<meta property="og:description" content="Temp Mail bảo mật cao">
-<meta property="og:type" content="website">
-
-<meta http-equiv="Content-Security-Policy"
-content="
-default-src 'self';
-img-src 'self' https: data:;
-style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
-font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com;
-script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://cdnjs.cloudflare.com;
-connect-src 'self' https://api.mail.tm https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;
-">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5GSMS — Email Ảo</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-
-:root{
---blue:#2563eb;
---blueDark:#1d4ed8;
---bg:#f8fbff;
---card:#ffffff;
---text:#0f172a;
---muted:#64748b;
---border:#e2e8f0;
---success:#22c55e;
---danger:#ef4444;
---shadow:0 10px 30px rgba(0,0,0,.06);
-}
-
-body.dark{
---bg:#020617;
---card:#0f172a;
---text:#e2e8f0;
---muted:#94a3b8;
---border:#1e293b;
---shadow:none;
-}
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-html{
-scroll-behavior:smooth;
-}
-
-body{
-font-family:'Syne',sans-serif;
-background:var(--bg);
-color:var(--text);
-min-height:100vh;
-transition:.25s;
-}
-
-nav{
-position:sticky;
-top:0;
-z-index:999;
-background:rgba(37,99,235,.95);
-backdrop-filter:blur(14px);
-padding:14px 20px;
-box-shadow:0 2px 12px rgba(0,0,0,.08);
-}
-
-.nav-wrap{
-max-width:1100px;
-margin:auto;
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:12px;
-}
-
-.logo{
-display:flex;
-align-items:center;
-gap:10px;
-font-weight:800;
-color:white;
-font-size:20px;
-}
-
-.logo i{
-font-size:22px;
-}
-
-.nav-right{
-display:flex;
-align-items:center;
-gap:10px;
-}
-
-.btn{
-border:none;
-outline:none;
-cursor:pointer;
-padding:12px 16px;
-border-radius:14px;
-font-weight:700;
-transition:.2s;
-font-family:'Syne',sans-serif;
-}
-
-.btn:active{
-transform:scale(.95);
-}
-
-.btn-primary{
-background:var(--blue);
-color:white;
-}
-
-.btn-primary:hover{
-background:var(--blueDark);
-}
-
-.btn-light{
-background:rgba(255,255,255,.15);
-color:white;
-}
-
-.btn-light:hover{
-background:rgba(255,255,255,.25);
-}
-
-.wrap{
-max-width:1100px;
-margin:auto;
-padding:24px;
-display:flex;
-flex-direction:column;
-gap:24px;
-}
-
-.card{
-background:var(--card);
-border:1px solid var(--border);
-border-radius:28px;
-padding:24px;
-box-shadow:var(--shadow);
-}
-
-.hero{
-display:flex;
-flex-direction:column;
-gap:22px;
-}
-
-.hero-top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:16px;
-flex-wrap:wrap;
-}
-
-.hero-title{
-font-size:32px;
-font-weight:800;
-}
-
-.hero-desc{
-font-size:14px;
-color:var(--muted);
-margin-top:6px;
-line-height:1.7;
-}
-
-.email-box{
-display:flex;
-gap:12px;
-flex-wrap:wrap;
-}
-
-.email-input{
-flex:1;
-min-width:240px;
-padding:18px;
-border-radius:18px;
-border:2px solid var(--border);
-background:var(--bg);
-font-family:'Space Mono',monospace;
-font-size:14px;
-font-weight:700;
-outline:none;
-color:var(--blue);
-}
-
-.action-group{
-display:flex;
-gap:10px;
-}
-
-.icon-btn{
-width:58px;
-height:58px;
-border:none;
-border-radius:18px;
-cursor:pointer;
-font-size:18px;
-transition:.2s;
-}
-
-.icon-btn:hover{
-transform:translateY(-2px);
-}
-
-.copy-btn{
-background:var(--blue);
-color:white;
-}
-
-.refresh-btn{
-background:#0ea5e9;
-color:white;
-}
-
-.status-bar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-flex-wrap:wrap;
-gap:12px;
-margin-top:6px;
-}
-
-.badge{
-padding:8px 12px;
-border-radius:999px;
-font-size:12px;
-font-weight:700;
-display:flex;
-align-items:center;
-gap:8px;
-}
-
-.badge-success{
-background:#dcfce7;
-color:#15803d;
-}
-
-.mail-list{
-margin-top:20px;
-display:flex;
-flex-direction:column;
-gap:12px;
-min-height:220px;
-}
-
-.mail-item{
-padding:18px;
-border-radius:18px;
-background:var(--bg);
-cursor:pointer;
-border-left:4px solid transparent;
-transition:.2s;
-}
-
-.mail-item:hover{
-transform:translateX(4px);
-border-left-color:var(--blue);
-}
-
-.mail-from{
-font-size:12px;
-font-weight:800;
-color:var(--blue);
-overflow:hidden;
-text-overflow:ellipsis;
-white-space:nowrap;
-}
-
-.mail-subject{
-font-size:16px;
-font-weight:700;
-margin-top:4px;
-}
-
-.mail-preview{
-font-size:13px;
-color:var(--muted);
-margin-top:6px;
-overflow:hidden;
-text-overflow:ellipsis;
-white-space:nowrap;
-}
-
-.empty{
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-gap:12px;
-flex:1;
-padding:50px 20px;
-color:var(--muted);
-}
-
-.empty i{
-font-size:36px;
-opacity:.4;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:20px;
-}
-
-.feature{
-padding:24px;
-border-radius:24px;
-background:var(--card);
-border:1px solid var(--border);
-}
-
-.feature i{
-font-size:28px;
-color:var(--blue);
-margin-bottom:16px;
-}
-
-.feature h3{
-font-size:18px;
-margin-bottom:10px;
-}
-
-.feature p{
-font-size:14px;
-line-height:1.7;
-color:var(--muted);
-}
-
-.footer{
-text-align:center;
-font-size:13px;
-color:var(--muted);
-padding:10px;
-}
-
-.modal{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.55);
-display:none;
-justify-content:center;
-align-items:center;
-padding:20px;
-z-index:9999;
-}
-
-.modal.open{
-display:flex;
-}
-
-.modal-box{
-background:var(--card);
-width:100%;
-max-width:700px;
-border-radius:28px;
-padding:28px;
-max-height:85vh;
-overflow:auto;
-}
-
-.modal-head{
-display:flex;
-justify-content:space-between;
-align-items:flex-start;
-gap:12px;
-}
-
-.modal-title{
-font-size:22px;
-font-weight:800;
-}
-
-.modal-from{
-font-size:13px;
-color:var(--muted);
-margin-top:6px;
-font-family:'Space Mono',monospace;
-}
-
-.close-btn{
-width:44px;
-height:44px;
-border:none;
-border-radius:14px;
-cursor:pointer;
-font-size:16px;
-}
-
-.modal-body{
-margin-top:20px;
-line-height:1.9;
-white-space:pre-wrap;
-word-break:break-word;
-font-size:14px;
-}
-
-.toast{
-position:fixed;
-bottom:24px;
-left:50%;
-transform:translateX(-50%) translateY(80px);
-background:#0f172a;
-color:white;
-padding:14px 18px;
-border-radius:16px;
-font-size:13px;
-font-weight:700;
-display:flex;
-align-items:center;
-gap:10px;
-transition:.3s;
-z-index:99999;
-}
-
-.toast.show{
-transform:translateX(-50%) translateY(0);
-}
-
-.skeleton{
-height:80px;
-border-radius:18px;
-background:linear-gradient(
-90deg,
-rgba(255,255,255,.04),
-rgba(255,255,255,.09),
-rgba(255,255,255,.04)
-);
-background-size:200%;
-animation:loading 1.2s infinite;
-}
-
-@keyframes loading{
-0%{
-background-position:200%;
-}
-100%{
-background-position:-200%;
-}
-}
-
-@media(max-width:768px){
-
-.wrap{
-padding:16px;
-}
-
-.card{
-padding:18px;
-border-radius:20px;
-}
-
-.hero-title{
-font-size:24px;
-}
-
-.email-box{
-flex-direction:column;
-}
-
-.action-group{
-width:100%;
-}
-
-.icon-btn{
-flex:1;
-}
-
-*{
-transition:none !important;
-animation-duration:.01ms !important;
-}
-
-}
-
+:root{--b:#2563eb;--bd:#1e40af;--bl:#eff6ff;--bg:#f0f4ff;--tx:#1e293b;--mu:#94a3b8;--br:#e2e8f0}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+[id]{scroll-margin-top:72px}
+body{background:var(--bg);font-family:'Syne',sans-serif;color:var(--tx);min-height:100vh}
+.banner{background:linear-gradient(90deg,#1e40af,#2563eb,#0ea5e9,#2563eb,#1e40af);background-size:200%;animation:bshift 4s linear infinite;color:#fff;font-size:12px;font-weight:700;letter-spacing:2px;padding:7px 0;overflow:hidden;position:sticky;top:0;z-index:1001}
+@keyframes bshift{0%{background-position:0%}100%{background-position:200%}}
+.banner-track{display:flex;width:max-content;animation:marquee 18s linear infinite}
+.banner-track span{white-space:nowrap;padding:0 60px}
+.banner-track i{margin:0 8px;opacity:.7}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+nav{background:rgba(37,99,235,.97);backdrop-filter:blur(12px);position:sticky;top:33px;z-index:1000;box-shadow:0 2px 20px rgba(37,99,235,.2)}
+.ni{max-width:900px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-ic{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff}
+.logo span{font-family:'Space Mono',monospace;font-size:1.1rem;color:#fff;letter-spacing:1px}
+.links{display:flex;overflow-x:auto;gap:24px;scrollbar-width:none;flex:1;justify-content:center}
+.links::-webkit-scrollbar{display:none}
+.links a{color:rgba(255,255,255,.8);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:color .2s}
+.links a:hover{color:#fff}
+.btn-out{flex-shrink:0;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;padding:8px 16px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;display:flex;align-items:center;gap:6px;transition:background .2s,transform .1s}
+.btn-out:hover{background:rgba(255,255,255,.22)}
+.btn-out:active{transform:scale(.95)}
+.wrap{max-width:900px;margin:0 auto;padding:28px 20px 60px;display:flex;flex-direction:column;gap:24px}
+.card{background:#fff;border-radius:24px;border:1px solid var(--br);padding:28px;box-shadow:0 2px 12px rgba(0,0,0,.04);animation:up .5s ease forwards;opacity:0}
+.card:nth-child(1){animation-delay:0s}.card:nth-child(2){animation-delay:.08s}.card:nth-child(3){animation-delay:.16s}.card:nth-child(4){animation-delay:.24s}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.ch{transition:transform .25s,box-shadow .25s}
+.ch:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.08)}
+.lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:12px}
+.erow{display:flex;gap:10px;align-items:center}
+.einp{flex:1;padding:14px 18px;background:var(--bl);border:2px solid transparent;border-radius:14px;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--b);outline:none;cursor:default;min-width:0;transition:border-color .2s}
+.einp:focus{border-color:var(--b)}
+.btn-cp{flex-shrink:0;background:var(--b);color:#fff;border:none;width:50px;height:50px;border-radius:14px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .1s}
+.btn-cp:hover{background:var(--bd)}.btn-cp:active{transform:scale(.93)}
+.ih{display:flex;justify-content:space-between;align-items:center;margin:28px 0 14px}
+.itl{font-size:15px;font-weight:800}
+.tbadge{font-family:'Space Mono',monospace;font-size:11px;color:var(--mu);display:flex;align-items:center;gap:5px;margin-top:4px}
+.tbadge span{color:var(--b);font-weight:700}
+.badge-a{background:#dcfce7;color:#16a34a;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;animation:pulse 2s infinite}
+.btn-rf{background:var(--bl);color:var(--b);border:none;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;display:flex;align-items:center;gap:6px;transition:background .2s,transform .1s}
+.btn-rf:hover{background:#dbeafe}.btn-rf:active{transform:scale(.95)}
+.btn-rf.spinning i{animation:spin .6s linear}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+#ml{min-height:180px;display:flex;flex-direction:column;gap:10px}
+.mi{padding:14px 18px;background:var(--bg);border-radius:14px;border-left:3px solid transparent;cursor:pointer;animation:up .35s ease forwards;opacity:0;transition:background .2s,border-color .2s,transform .15s}
+.mi:hover{background:var(--bl);border-left-color:var(--b);transform:translateX(3px)}
+.mf{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--b);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ms{font-size:13px;font-weight:700;margin-top:2px}
+.mx{font-size:11px;color:var(--mu);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;color:var(--mu);font-size:13px;gap:10px}
+.empty i{font-size:28px;opacity:.4}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:600px){.g2{grid-template-columns:1fr}}
+.sic{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px;background:var(--bl);color:var(--b)}
+.dark{background:#0f172a;color:#94a3b8;border-color:#1e293b}
+.dark .sic{background:rgba(255,255,255,.06);color:#34d399}
+.dark h3{color:#fff}
+.stl{font-size:15px;font-weight:800;margin-bottom:6px}
+.mono{font-family:'Space Mono',monospace;font-size:11px;color:#64748b;margin-top:8px;line-height:1.9}
+.mono .o{color:#fb923c}.mono .g{color:#34d399}
+.sac{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.sac-bar{width:4px;height:28px;background:linear-gradient(to bottom,var(--b),#22d3ee);border-radius:4px;flex-shrink:0}
+.sac h2{font-size:18px;font-weight:800;font-style:italic;text-transform:uppercase}
+.stxt{font-size:13px;line-height:1.9;color:#475569}
+.cc{background:linear-gradient(135deg,var(--b),#1d4ed8,var(--bd));border:none;color:#fff;text-align:center}
+.ctl{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.7;margin-bottom:20px}
+.cls{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.cl{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#fff;padding:12px 22px;border-radius:14px;font-size:12px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px;transition:background .2s,transform .1s}
+.cl:hover{background:rgba(255,255,255,.22);transform:translateY(-2px)}
+.mo{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);z-index:2000;align-items:center;justify-content:center;padding:20px}
+.mo.open{display:flex}
+.md{background:#fff;border-radius:24px;padding:28px;width:100%;max-width:600px;max-height:80vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.2);animation:up .3s ease}
+.mh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:12px}
+.msub{font-size:17px;font-weight:800}
+.mfrm{font-size:11px;color:var(--mu);margin-top:4px;font-family:'Space Mono',monospace}
+.btn-x{flex-shrink:0;background:var(--bg);border:none;width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:14px;color:var(--mu);display:flex;align-items:center;justify-content:center;transition:background .2s}
+.btn-x:hover{background:#fee2e2;color:#ef4444}
+.mdiv{height:1px;background:var(--br);margin:16px 0}
+.mbody{font-size:13px;line-height:1.8;white-space:pre-wrap;word-break:break-word}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:#0f172a;color:#fff;padding:12px 22px;border-radius:14px;font-size:12px;font-weight:700;z-index:9999;transition:transform .3s;display:flex;align-items:center;gap:8px;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast i{color:#22d3ee}
 </style>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+const auth=getAuth(initializeApp({apiKey:"AIzaSyDb1w0ZJxyTAY2usK6Agnr1ArQ_YIOGh-Y",authDomain:"tempmail-login-810b3.firebaseapp.com",projectId:"tempmail-login-810b3",appId:"1:821078583826:web:04cc70bfbbc36cba6dc6cb"}));
+onAuthStateChanged(auth,u=>{if(!u)location.href='login.html'});
+window.handleLogout=()=>signOut(auth).then(()=>location.href='login.html');
+</script>
 </head>
+<body id="top">
 
-<body>
+<div class="banner">
+  <div class="banner-track">
+    <span><i class="fas fa-star"></i> WELCOME TO 5GSMS WEBSITE <i class="fas fa-paper-plane"></i> Have a good day! <i class="fas fa-star"></i> WELCOME TO 5GSMS WEBSITE <i class="fas fa-paper-plane"></i> Have a good day! <i class="fas fa-star"></i></span>
+    <span><i class="fas fa-star"></i> WELCOME TO 5GSMS WEBSITE <i class="fas fa-paper-plane"></i> Have a good day! <i class="fas fa-star"></i> WELCOME TO 5GSMS WEBSITE <i class="fas fa-paper-plane"></i> Have a good day! <i class="fas fa-star"></i></span>
+  </div>
+</div>
 
 <nav>
-<div class="nav-wrap">
-
-<div class="logo">
-<i class="fas fa-paper-plane"></i>
-<span>5GSMS</span>
-</div>
-
-<div class="nav-right">
-
-<button class="btn btn-light"
-onclick="toggleDarkMode()">
-<i class="fas fa-moon"></i>
-</button>
-
-<button class="btn btn-light"
-onclick="logout()">
-<i class="fas fa-power-off"></i>
-</button>
-
-</div>
-
-</div>
+  <div class="ni">
+    <div class="logo"><div class="logo-ic"><i class="fas fa-paper-plane"></i></div><span>5GSMS</span></div>
+    <div class="links">
+      <a href="#top">Trang chủ</a><a href="#dich-vu">Dịch vụ</a><a href="#bao-mat">Bảo mật</a><a href="#lien-he">Liên hệ</a>
+    </div>
+    <button class="btn-out" onclick="handleLogout()"><i class="fas fa-power-off"></i> THOÁT</button>
+  </div>
 </nav>
 
 <div class="wrap">
+  <div class="card">
+    <div class="lbl">Địa chỉ Email định danh của bạn</div>
+    <div class="erow">
+      <input id="email-address" type="text" readonly class="einp" value="Đang kết nối hệ thống...">
+      <button class="btn-cp" id="btn-cp" onclick="copyEmail()"><i class="fas fa-copy"></i></button>
+      <button class="btn-cp" id="btn-new" onclick="newEmail()" style="background:#0ea5e9" title="Đổi email mới"><i class="fas fa-arrows-rotate"></i></button>
+    </div>
+    <div class="ih">
+      <div>
+        <div class="itl">Hộp thư đến</div>
+        <div class="tbadge"><i class="fas fa-circle" style="font-size:6px;color:#22c55e"></i> Tự động quét · còn <span id="cd">5</span>s</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span class="badge-a">AUTO REFRESH</span>
+        <button class="btn-rf" id="btn-rf" onclick="manualRefresh()"><i class="fas fa-rotate-right"></i> Làm mới</button>
+      </div>
+    </div>
+    <div id="ml"><div class="empty"><i class="fas fa-spinner fa-spin"></i><p>Đang quét thư mới...</p></div></div>
+  </div>
 
-<div class="card hero">
+  <div id="dich-vu" class="g2">
+    <div class="card ch">
+      <div class="sic"><i class="fas fa-bolt"></i></div>
+      <div class="stl">Dịch vụ hiện có</div>
+      <p style="font-size:12px;color:#64748b;line-height:1.7">Hệ thống Email ảo tốc độ cao, tự động hủy để bảo vệ danh tính 24/7.</p>
+    </div>
+    <div class="card ch dark">
+      <div class="sic"><i class="fas fa-code"></i></div>
+      <h3 class="stl">Giao diện API</h3>
+      <div class="mono">Status: <span class="o">Locked</span><br>> Connecting to <span class="g">5GSMS Cloud</span>...<br>> <span style="opacity:.5">v2.0.0 · Secure</span></div>
+    </div>
+  </div>
 
-<div class="hero-top">
+  <div id="bao-mat" class="card ch">
+    <div class="sac"><div class="sac-bar"></div><h2>Hệ thống bảo mật 5GSMS</h2></div>
+    <p class="stxt">Hệ thống <strong>5GSMS</strong> được triển khai trên hạ tầng bảo mật đa lớp. Với <strong>Firebase Authentication</strong>, mọi phiên làm việc đều được xác thực theo thời gian thực, kết hợp mã hóa đầu cuối và cơ chế phòng vệ chống khai thác dữ liệu tiên tiến.</p>
+  </div>
 
-<div>
-<div class="hero-title">
-Secure Temp Mail
+  <div id="lien-he" class="card cc">
+    <div class="ctl">Trung tâm điều hành hỗ trợ</div>
+    <div class="cls">
+      <a href="tel:0328509184" class="cl"><i class="fas fa-phone"></i> 0328509184</a>
+      <a href="mailto:hotrogoogie.vn@gmail.com" class="cl"><i class="fas fa-envelope"></i> hotrogoogie.vn@gmail.com</a>
+      <a href="support.html" class="cl"><i class="fas fa-headset"></i> Báo lỗi &amp; Hỗ trợ</a>
+    </div>
+  </div>
 </div>
 
-<div class="hero-desc">
-Hệ thống email tạm thời bảo mật cao, chống spam và tự động huỷ.
-</div>
-</div>
-
-<div class="badge badge-success">
-<i class="fas fa-circle"></i>
-Auto Refresh
-</div>
-
-</div>
-
-<div class="email-box">
-
-<input
-id="emailInput"
-class="email-input"
-readonly
-value="Đang kết nối..."
-/>
-
-<div class="action-group">
-
-<button
-class="icon-btn copy-btn"
-onclick="copyEmail()">
-<i class="fas fa-copy"></i>
-</button>
-
-<button
-class="icon-btn refresh-btn"
-onclick="generateNewEmail()">
-<i class="fas fa-rotate"></i>
-</button>
-
+<div class="mo" id="mo" onclick="closeModal(event)">
+  <div class="md">
+    <div class="mh">
+      <div><div class="msub" id="msub">—</div><div class="mfrm" id="mfrm">—</div></div>
+      <button class="btn-x" onclick="closeMD()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="mdiv"></div>
+    <div class="mbody" id="mbody">Đang tải...</div>
+  </div>
 </div>
 
-</div>
-
-<div class="status-bar">
-
-<div style="font-size:13px;color:var(--muted)">
-Tự động làm mới sau
-<b id="countdown">5</b>s
-</div>
-
-<button class="btn btn-primary"
-onclick="manualRefresh()">
-<i class="fas fa-rotate-right"></i>
-Làm mới
-</button>
-
-</div>
-
-<div class="mail-list" id="mailList">
-
-<div class="skeleton"></div>
-<div class="skeleton"></div>
-<div class="skeleton"></div>
-
-</div>
-
-</div>
-
-<div class="grid">
-
-<div class="feature">
-<i class="fas fa-shield-halved"></i>
-<h3>Bảo mật nâng cao</h3>
-<p>
-Mọi phiên làm việc được xác thực thời gian thực và tự động xoá định kỳ.
-</p>
-</div>
-
-<div class="feature">
-<i class="fas fa-bolt"></i>
-<h3>Tốc độ cao</h3>
-<p>
-Hệ thống tối ưu realtime inbox với refresh thông minh và loading mượt.
-</p>
-</div>
-
-<div class="feature">
-<i class="fas fa-mobile-screen"></i>
-<h3>Tối ưu Mobile</h3>
-<p>
-Responsive hoàn chỉnh cho điện thoại, tablet và desktop.
-</p>
-</div>
-
-</div>
-
-<div class="footer">
-© 2026 5GSMS — Secure Temp Mail
-</div>
-
-</div>
-
-<div class="modal" id="modal">
-
-<div class="modal-box">
-
-<div class="modal-head">
-
-<div>
-<div class="modal-title" id="modalTitle">
-Loading...
-</div>
-
-<div class="modal-from" id="modalFrom">
-—
-</div>
-</div>
-
-<button class="close-btn"
-onclick="closeModal()">
-<i class="fas fa-times"></i>
-</button>
-
-</div>
-
-<div class="modal-body"
-id="modalBody">
-Đang tải...
-</div>
-
-</div>
-
-</div>
-
-<div class="toast" id="toast">
-<i class="fas fa-check-circle"></i>
-<span id="toastText">Done</span>
-</div>
-
-<script type="module">
-
-import {
-initializeApp
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-
-import {
-getAuth,
-onAuthStateChanged,
-signOut
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-const firebaseConfig = {
-
-apiKey:"YOUR_API_KEY",
-authDomain:"YOUR_AUTH_DOMAIN",
-projectId:"YOUR_PROJECT_ID",
-appId:"YOUR_APP_ID"
-
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-onAuthStateChanged(auth,(user)=>{
-
-if(!user){
-location.href='login.html';
-}
-
-});
-
-window.logout=()=>{
-signOut(auth)
-.then(()=>{
-location.href='login.html';
-});
-};
-
-</script>
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="tmsg">Đã sao chép!</span></div>
 
 <script>
-
 const API='https://api.mail.tm';
-
-let account=null;
-let refreshInterval=null;
-let countdownInterval=null;
-let countdown=5;
-
-function showToast(text){
-
-const toast=document.getElementById('toast');
-document.getElementById('toastText').textContent=text;
-
-toast.classList.add('show');
-
-setTimeout(()=>{
-toast.classList.remove('show');
-},2500);
-
-}
-
-function toggleDarkMode(){
-
-document.body.classList.toggle('dark');
-
-localStorage.setItem(
-'darkmode',
-document.body.classList.contains('dark')
-);
-
-}
-
-if(localStorage.getItem('darkmode')==='true'){
-document.body.classList.add('dark');
-}
+let acc=null,fi=null,ci=null,cv=5;
 
 async function createAccount(){
-
-const input=document.getElementById('emailInput');
-
-try{
-
-const domainRes=await fetch(`${API}/domains`);
-
-const domainData=await domainRes.json();
-
-const domain=domainData['hydra:member'][0].domain;
-
-const address=`user${Math.random().toString(36).slice(2,10)}@${domain}`;
-
-const password=Math.random().toString(36).slice(2)+'Aa1!';
-
-await fetch(`${API}/accounts`,{
-method:'POST',
-headers:{
-'Content-Type':'application/json'
-},
-body:JSON.stringify({
-address,
-password
-})
-});
-
-const tokenRes=await fetch(`${API}/token`,{
-method:'POST',
-headers:{
-'Content-Type':'application/json'
-},
-body:JSON.stringify({
-address,
-password
-})
-});
-
-const tokenData=await tokenRes.json();
-
-account={
-address,
-token:tokenData.token
-};
-
-input.value=address;
-
-showToast('Email đã được tạo');
-
-fetchMessages();
-
-startAutoRefresh();
-
-scheduleCleanup();
-
-}catch(err){
-
-console.error(err);
-
-input.value='Kết nối thất bại';
-
-showToast('Không thể kết nối');
-
+  const el=document.getElementById('email-address');
+  try{
+    const dr=await fetch(`${API}/domains`);
+    if(!dr.ok)throw 0;
+    const dom=(await dr.json())['hydra:member'][0].domain;
+    const addr=`user${Math.random().toString(36).slice(2,10)}@${dom}`;
+    const pw=Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2).toUpperCase()+'!9';
+    const ar=await fetch(`${API}/accounts`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({address:addr,password:pw})});
+    if(!ar.ok)throw 0;
+    const tr=await fetch(`${API}/token`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({address:addr,password:pw})});
+    if(!tr.ok)throw 0;
+    acc={addr,token:(await tr.json()).token};
+    el.value=addr;
+    if(fi)clearInterval(fi);if(ci)clearInterval(ci);
+    await fetchMsgs();startRefresh();
+  }catch(e){el.value='Đang kết nối lại...';setTimeout(createAccount,3000)}
 }
 
+function newEmail(){
+  const b=document.getElementById('btn-new');
+  b.innerHTML='<i class="fas fa-spinner fa-spin"></i>';
+  b.disabled=true;
+  if(fi)clearInterval(fi);
+  if(ci)clearInterval(ci);
+  document.getElementById('email-address').value='Đang tạo email mới...';
+  document.getElementById('ml').innerHTML='<div class="empty"><i class="fas fa-spinner fa-spin"></i><p>Đang tạo địa chỉ mới...</p></div>';
+  acc=null;
+  createAccount().then(()=>{
+    b.innerHTML='<i class="fas fa-arrows-rotate"></i>';
+    b.disabled=false;
+    showToast('Đã tạo email mới!','fa-arrows-rotate');
+  });
 }
 
-function startAutoRefresh(){
-
-clearInterval(refreshInterval);
-clearInterval(countdownInterval);
-
-countdown=5;
-
-countdownInterval=setInterval(()=>{
-
-countdown--;
-
-document.getElementById('countdown').textContent=countdown;
-
-if(countdown<=0){
-countdown=5;
-}
-
-},1000);
-
-refreshInterval=setInterval(()=>{
-
-fetchMessages();
-
-countdown=5;
-
-},5000);
-
-}
-
-async function fetchMessages(){
-
-if(!account)return;
-
-try{
-
-const res=await fetch(`${API}/messages`,{
-headers:{
-Authorization:`Bearer ${account.token}`
-}
-});
-
-const data=await res.json();
-
-const mails=data['hydra:member'];
-
-const list=document.getElementById('mailList');
-
-if(!mails.length){
-
-list.innerHTML=`
-<div class="empty">
-<i class="fas fa-inbox"></i>
-<p>Chưa có thư nào.</p>
-</div>
-`;
-
-return;
-
-}
-
-list.innerHTML='';
-
-mails.forEach(mail=>{
-
-const div=document.createElement('div');
-
-div.className='mail-item';
-
-div.innerHTML=`
-<div class="mail-from">${escapeHTML(mail.from.address)}</div>
-<div class="mail-subject">${escapeHTML(mail.subject || '(Không tiêu đề)')}</div>
-<div class="mail-preview">${escapeHTML(mail.intro || '')}</div>
-`;
-
-div.onclick=()=>openMail(mail.id);
-
-list.appendChild(div);
-
-});
-
-}catch(err){
-
-console.error(err);
-
-}
-
-}
-
-async function openMail(id){
-
-document.getElementById('modal').classList.add('open');
-
-document.getElementById('modalBody').textContent='Đang tải...';
-
-try{
-
-const res=await fetch(`${API}/messages/${id}`,{
-headers:{
-Authorization:`Bearer ${account.token}`
-}
-});
-
-const data=await res.json();
-
-document.getElementById('modalTitle').textContent=data.subject || '(Không tiêu đề)';
-
-document.getElementById('modalFrom').textContent=`Từ: ${data.from.address}`;
-
-document.getElementById('modalBody').textContent=
-data.text ||
-'Không có nội dung';
-
-}catch(err){
-
-document.getElementById('modalBody').textContent=
-'Không thể tải email';
-
-}
-
-}
-
-function closeModal(){
-document.getElementById('modal').classList.remove('open');
-}
-
-function copyEmail(){
-
-const text=document.getElementById('emailInput').value;
-
-navigator.clipboard.writeText(text);
-
-showToast('Đã sao chép email');
-
-}
-
-async function generateNewEmail(){
-
-if(refreshInterval){
-clearInterval(refreshInterval);
-}
-
-if(countdownInterval){
-clearInterval(countdownInterval);
-}
-
-document.getElementById('mailList').innerHTML=`
-<div class="skeleton"></div>
-<div class="skeleton"></div>
-<div class="skeleton"></div>
-`;
-
-await createAccount();
-
+function startRefresh(){
+  cv=5;document.getElementById('cd').textContent=cv;
+  ci=setInterval(()=>{cv--;document.getElementById('cd').textContent=cv;if(cv<=0)cv=5},1000);
+  fi=setInterval(async()=>{await fetchMsgs();cv=5},5000);
 }
 
 async function manualRefresh(){
-
-await fetchMessages();
-
-showToast('Đã cập nhật');
-
+  const b=document.getElementById('btn-rf');b.classList.add('spinning');
+  await fetchMsgs();setTimeout(()=>b.classList.remove('spinning'),600);
+  showToast('Đã cập nhật hộp thư!','fa-rotate-right');
 }
 
-function scheduleCleanup(){
-
-setTimeout(()=>{
-
-account=null;
-
-generateNewEmail();
-
-showToast('Email cũ đã được huỷ');
-
-},10*60*1000);
-
+async function fetchMsgs(){
+  if(!acc)return;
+  try{
+    const r=await fetch(`${API}/messages`,{headers:{Authorization:`Bearer ${acc.token}`}});
+    if(!r.ok)return;
+    const msgs=(await r.json())['hydra:member'];
+    const ml=document.getElementById('ml');
+    if(!msgs?.length){ml.innerHTML='<div class="empty"><i class="fas fa-inbox"></i><p>Chưa có thư nào.</p></div>';return}
+    ml.innerHTML=msgs.map((m,i)=>`<div class="mi" style="animation-delay:${i*.05}s" onclick="openMsg('${m.id}','${esc(m.subject||"(Trống)")}','${esc(m.from.address)}')"><div class="mf">${esc(m.from.address)}</div><div class="ms">${esc(m.subject||'(Không có tiêu đề)')}</div><div class="mx">${esc(m.intro||'')}</div></div>`).join('');
+  }catch(e){}
 }
 
-function escapeHTML(str){
-
-return String(str)
-.replace(/&/g,'&amp;')
-.replace(/</g,'&lt;')
-.replace(/>/g,'&gt;')
-.replace(/"/g,'&quot;')
-.replace(/'/g,'&#039;');
-
+async function openMsg(id,sub,from){
+  document.getElementById('msub').textContent=sub;
+  document.getElementById('mfrm').textContent='Từ: '+from;
+  document.getElementById('mbody').textContent='Đang tải...';
+  document.getElementById('mo').classList.add('open');
+  try{
+    const d=await(await fetch(`${API}/messages/${id}`,{headers:{Authorization:`Bearer ${acc.token}`}})).json();
+    document.getElementById('mbody').textContent=d.text||d.html?.replace(/<[^>]*>/g,'')||'(Không có nội dung)';
+  }catch(e){document.getElementById('mbody').textContent='Không thể tải nội dung.'}
 }
 
-window.addEventListener('beforeunload',()=>{
+function closeModal(e){if(e.target===document.getElementById('mo'))closeMD()}
+function closeMD(){document.getElementById('mo').classList.remove('open')}
 
-clearInterval(refreshInterval);
-clearInterval(countdownInterval);
-
-});
-
-if(Notification.permission!=='granted'){
-Notification.requestPermission();
+function copyEmail(){
+  const v=document.getElementById('email-address').value;
+  if(!v||v.includes('kết nối'))return;
+  navigator.clipboard.writeText(v).then(()=>{
+    const b=document.getElementById('btn-cp');
+    b.innerHTML='<i class="fas fa-check"></i>';b.style.background='#16a34a';
+    setTimeout(()=>{b.innerHTML='<i class="fas fa-copy"></i>';b.style.background=''},2000);
+    showToast('Đã sao chép email!');
+  }).catch(()=>{document.getElementById('email-address').select();document.execCommand('copy');showToast('Đã sao chép!')});
 }
+
+let tt;
+function showToast(msg,ic='fa-check-circle'){
+  const t=document.getElementById('toast');
+  document.getElementById('tmsg').textContent=msg;
+  t.querySelector('i').className=`fas ${ic}`;
+  t.classList.add('show');clearTimeout(tt);
+  tt=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 
 createAccount();
-
 </script>
-
 </body>
 </html>
