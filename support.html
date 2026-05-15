@@ -23,7 +23,8 @@
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2 italic">Họ và tên:</label>
                     <input type="text" name="user_name" id="user_name" required 
-                        class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Ví dụ: Nguyễn Văn A">
+                        class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" 
+                        placeholder="Nhập họ và tên của bạn...">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2 italic">Email để nhận phản hồi:</label>
@@ -47,7 +48,6 @@
 
     <script type="text/javascript">
         (function() {
-            // Đã gắn Public Key của bạn
             emailjs.init("jTVIEnSzRcRkMT6Bm");
         })();
 
@@ -61,11 +61,10 @@
             status.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Đang gửi yêu cầu của bạn...';
             btn.disabled = true;
 
-            // Gửi dữ liệu qua EmailJS với Service ID và Template ID bạn đã cung cấp
             emailjs.sendForm('service_k67j4x8', 'template_mcqt4ss', this)
                 .then(function() {
                     status.className = "mt-4 text-center text-green-700 bg-green-50 p-3 rounded-lg shadow-inner";
-                    status.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Gửi thành công! Kiểm tra Gmail ngay nhé Trung.';
+                    status.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Gửi thành công! Hãy kiểm tra Gmail nhé.';
                     document.getElementById('contact-form').reset();
                     btn.disabled = false;
                 }, function(error) {
