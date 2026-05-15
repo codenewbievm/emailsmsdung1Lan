@@ -822,24 +822,22 @@ async function sendChat() {
     btn.disabled = true;
 
     try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'anthropic-dangerous-direct-browser-access': 'true',
-                'anthropic-version': '2023-06-01'
-            },
-            body: JSON.stringify({
-                model: 'claude-sonnet-4-20250514',
-                max_tokens: 1000,
-                system: SITE_CONTEXT,
-                messages: [{ role: 'user', content: msg }]
-            })
-        });
-
+        const GEMINI_KEY = 'AIzaSyABY8sAGPYf827gdtgBFqM4sDp3VsRe2ZY';
+        const res = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    system_instruction: { parts: [{ text: SITE_CONTEXT }] },
+                    contents: [{ role: 'user', parts: [{ text: msg }] }],
+                    generationConfig: { maxOutputTokens: 600, temperature: 0.7 }
+                })
+            }
+        );
         const data = await res.json();
-        const reply = data.content?.map(b => b.text || '').join('') || 'Xin lỗi, tôi không thể trả lời lúc này.';
-
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text
+            || 'Xin lỗi, tôi không thể trả lời lúc này.';
         document.getElementById(typingId).innerHTML = reply.replace(/\n/g, '<br>');
     } catch(e) {
         document.getElementById(typingId).innerHTML = '⚠️ Lỗi kết nối. Vui lòng thử lại sau.';
