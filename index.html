@@ -1,222 +1,268 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5GSMS - Trải Nghiệm Hiện Đại</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        /* Hiệu ứng cuộn mượt mà */
-        html { scroll-behavior: smooth; }
-
-        /* Hiệu ứng nảy (Bounce) khi nhấn nút */
-        .btn-bounce { transition: transform 0.1s active; }
-        .btn-bounce:active { transform: scale(0.95); }
-
-        /* Hiệu ứng Hover cho các thẻ */
-        .card-hover { 
-            transition: all 0.3s ease; 
-        }
-        .card-hover:hover { 
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Thanh điều hướng mờ kính (Glassmorphism) */
-        .glass-nav {
-            background: rgba(37, 99, 235, 0.9);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        /* Animation khi hiện thư mới */
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-in { animation: slideIn 0.4s ease-out forwards; }
-    </style>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDb1w0ZJxyTAY2usK6Agnr1ArQ_YIOGh-Y",
-            authDomain: "tempmail-login-810b3.firebaseapp.com",
-            projectId: "tempmail-login-810b3",
-            appId: "1:821078583826:web:04cc70bfbbc36cba6dc6cb"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        onAuthStateChanged(auth, (user) => {
-            if (!user) { window.location.href = 'login.html'; }
-        });
-
-        window.handleLogout = () => {
-            signOut(auth).then(() => { window.location.href = 'login.html'; });
-        };
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5GSMS — Email Ảo</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+:root{--b:#2563eb;--bd:#1e40af;--bl:#eff6ff;--bg:#f0f4ff;--tx:#1e293b;--mu:#94a3b8;--br:#e2e8f0}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+[id]{scroll-margin-top:72px}
+body{background:var(--bg);font-family:'Syne',sans-serif;color:var(--tx);min-height:100vh}
+.banner{background:linear-gradient(90deg,#1e40af,#2563eb,#0ea5e9,#2563eb,#1e40af);background-size:200%;animation:bshift 4s linear infinite;color:#fff;font-size:12px;font-weight:700;letter-spacing:2px;padding:7px 0;overflow:hidden;position:sticky;top:0;z-index:1001}
+@keyframes bshift{0%{background-position:0%}100%{background-position:200%}}
+.banner-track{display:flex;width:max-content;animation:marquee 18s linear infinite}
+.banner-track span{white-space:nowrap;padding:0 60px}
+.banner-track i{margin:0 8px;opacity:.7}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+nav{background:rgba(37,99,235,.97);backdrop-filter:blur(12px);position:sticky;top:33px;z-index:1000;box-shadow:0 2px 20px rgba(37,99,235,.2)}
+.ni{max-width:900px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-ic{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff}
+.logo span{font-family:'Space Mono',monospace;font-size:1.1rem;color:#fff;letter-spacing:1px}
+.links{display:flex;overflow-x:auto;gap:24px;scrollbar-width:none;flex:1;justify-content:center}
+.links::-webkit-scrollbar{display:none}
+.links a{color:rgba(255,255,255,.8);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:color .2s}
+.links a:hover{color:#fff}
+.btn-out{flex-shrink:0;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;padding:8px 16px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;display:flex;align-items:center;gap:6px;transition:background .2s,transform .1s}
+.btn-out:hover{background:rgba(255,255,255,.22)}
+.btn-out:active{transform:scale(.95)}
+.wrap{max-width:900px;margin:0 auto;padding:28px 20px 60px;display:flex;flex-direction:column;gap:24px}
+.card{background:#fff;border-radius:24px;border:1px solid var(--br);padding:28px;box-shadow:0 2px 12px rgba(0,0,0,.04);animation:up .5s ease forwards;opacity:0}
+.card:nth-child(1){animation-delay:0s}.card:nth-child(2){animation-delay:.08s}.card:nth-child(3){animation-delay:.16s}.card:nth-child(4){animation-delay:.24s}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.ch{transition:transform .25s,box-shadow .25s}
+.ch:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.08)}
+.lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:12px}
+.erow{display:flex;gap:10px;align-items:center}
+.einp{flex:1;padding:14px 18px;background:var(--bl);border:2px solid transparent;border-radius:14px;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--b);outline:none;cursor:default;min-width:0;transition:border-color .2s}
+.einp:focus{border-color:var(--b)}
+.btn-cp{flex-shrink:0;background:var(--b);color:#fff;border:none;width:50px;height:50px;border-radius:14px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .1s}
+.btn-cp:hover{background:var(--bd)}.btn-cp:active{transform:scale(.93)}
+.ih{display:flex;justify-content:space-between;align-items:center;margin:28px 0 14px}
+.itl{font-size:15px;font-weight:800}
+.tbadge{font-family:'Space Mono',monospace;font-size:11px;color:var(--mu);display:flex;align-items:center;gap:5px;margin-top:4px}
+.tbadge span{color:var(--b);font-weight:700}
+.badge-a{background:#dcfce7;color:#16a34a;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;animation:pulse 2s infinite}
+.btn-rf{background:var(--bl);color:var(--b);border:none;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;display:flex;align-items:center;gap:6px;transition:background .2s,transform .1s}
+.btn-rf:hover{background:#dbeafe}.btn-rf:active{transform:scale(.95)}
+.btn-rf.spinning i{animation:spin .6s linear}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+#ml{min-height:180px;display:flex;flex-direction:column;gap:10px}
+.mi{padding:14px 18px;background:var(--bg);border-radius:14px;border-left:3px solid transparent;cursor:pointer;animation:up .35s ease forwards;opacity:0;transition:background .2s,border-color .2s,transform .15s}
+.mi:hover{background:var(--bl);border-left-color:var(--b);transform:translateX(3px)}
+.mf{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--b);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ms{font-size:13px;font-weight:700;margin-top:2px}
+.mx{font-size:11px;color:var(--mu);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;color:var(--mu);font-size:13px;gap:10px}
+.empty i{font-size:28px;opacity:.4}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:600px){.g2{grid-template-columns:1fr}}
+.sic{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px;background:var(--bl);color:var(--b)}
+.dark{background:#0f172a;color:#94a3b8;border-color:#1e293b}
+.dark .sic{background:rgba(255,255,255,.06);color:#34d399}
+.dark h3{color:#fff}
+.stl{font-size:15px;font-weight:800;margin-bottom:6px}
+.mono{font-family:'Space Mono',monospace;font-size:11px;color:#64748b;margin-top:8px;line-height:1.9}
+.mono .o{color:#fb923c}.mono .g{color:#34d399}
+.sac{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.sac-bar{width:4px;height:28px;background:linear-gradient(to bottom,var(--b),#22d3ee);border-radius:4px;flex-shrink:0}
+.sac h2{font-size:18px;font-weight:800;font-style:italic;text-transform:uppercase}
+.stxt{font-size:13px;line-height:1.9;color:#475569}
+.cc{background:linear-gradient(135deg,var(--b),#1d4ed8,var(--bd));border:none;color:#fff;text-align:center}
+.ctl{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.7;margin-bottom:20px}
+.cls{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.cl{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#fff;padding:12px 22px;border-radius:14px;font-size:12px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px;transition:background .2s,transform .1s}
+.cl:hover{background:rgba(255,255,255,.22);transform:translateY(-2px)}
+.mo{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);z-index:2000;align-items:center;justify-content:center;padding:20px}
+.mo.open{display:flex}
+.md{background:#fff;border-radius:24px;padding:28px;width:100%;max-width:600px;max-height:80vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.2);animation:up .3s ease}
+.mh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;gap:12px}
+.msub{font-size:17px;font-weight:800}
+.mfrm{font-size:11px;color:var(--mu);margin-top:4px;font-family:'Space Mono',monospace}
+.btn-x{flex-shrink:0;background:var(--bg);border:none;width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:14px;color:var(--mu);display:flex;align-items:center;justify-content:center;transition:background .2s}
+.btn-x:hover{background:#fee2e2;color:#ef4444}
+.mdiv{height:1px;background:var(--br);margin:16px 0}
+.mbody{font-size:13px;line-height:1.8;white-space:pre-wrap;word-break:break-word}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:#0f172a;color:#fff;padding:12px 22px;border-radius:14px;font-size:12px;font-weight:700;z-index:9999;transition:transform .3s;display:flex;align-items:center;gap:8px;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast i{color:#22d3ee}
+</style>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+const auth=getAuth(initializeApp({apiKey:"AIzaSyDb1w0ZJxyTAY2usK6Agnr1ArQ_YIOGh-Y",authDomain:"tempmail-login-810b3.firebaseapp.com",projectId:"tempmail-login-810b3",appId:"1:821078583826:web:04cc70bfbbc36cba6dc6cb"}));
+onAuthStateChanged(auth,u=>{if(!u)location.href='login.html'});
+window.handleLogout=()=>signOut(auth).then(()=>location.href='login.html');
+</script>
 </head>
-<body class="bg-slate-50 min-h-screen font-sans">
-    <nav class="glass-nav p-4 text-white shadow-md sticky top-0 z-50 transition-all">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <div class="bg-white p-2 rounded-lg">
-                    <i class="fas fa-paper-plane text-blue-600"></i>
-                </div>
-                <span class="text-xl font-black tracking-tighter uppercase">5GSMS</span>
-            </div> 
-            
-            <div class="hidden md:flex space-x-8 text-sm font-semibold uppercase tracking-wider">
-                <a href="#" class="hover:text-blue-200 transition">Trang chủ</a>
-                <a href="#dich-vu" class="hover:text-blue-200 transition">Dịch vụ</a>
-                <a href="#bai-viet" class="hover:text-blue-200 transition">Bảo mật</a>
-                <a href="#lien-he" class="hover:text-blue-200 transition">Liên hệ</a>
-            </div>
+<body id="top">
 
-            <button onclick="handleLogout()" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full text-xs font-bold transition flex items-center btn-bounce">
-                <i class="fas fa-power-off mr-2"></i> THOÁT
-            </button>
-        </div>
-    </nav>
+<div class="banner">
+  <div class="banner-track">
+    <span><i class="fas fa-star"></i> WELCOME TO 5GSMS WEBSITE <i class="fas fa-paper-plane"></i> Have a good day! <i class="fas fa-star"></i> WELCOME TO 5GSMS WEBSITE <i class="fas fa-paper-plane"></i> Have a good day! <i class="fas fa-star"></i></span>
+    <span><i class="fas fa-star"></i> WELCOME TO 5GSMS WEBSITE <i class="fas fa-paper-plane"></i> Have a good day! <i class="fas fa-star"></i> WELCOME TO 5GSMS WEBSITE <i class="fas fa-paper-plane"></i> Have a good day! <i class="fas fa-star"></i></span>
+  </div>
+</div>
 
-    <div class="container mx-auto p-6 max-w-4xl">
-        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 mb-8 animate-in">
-            <h3 class="text-slate-400 uppercase text-xs font-bold tracking-widest mb-4">Địa chỉ Email định danh</h3>
-            <div class="flex items-center space-x-3">
-                <input id="email-address" type="text" readonly 
-                       class="w-full p-4 bg-slate-50 border-none rounded-2xl text-blue-600 font-mono font-bold focus:ring-2 focus:ring-blue-500 transition-all" 
-                       value="Đang tạo email...">
-                <button onclick="copyEmail()" class="bg-blue-600 text-white p-4 rounded-2xl hover:bg-blue-700 transition btn-bounce shadow-lg shadow-blue-200">
-                    <i class="fas fa-copy"></i>
-                </button>
-            </div>
-            
-            <div class="mt-8">
-                <div class="flex justify-between items-center mb-4">
-                    <h4 class="font-bold text-slate-800">Hộp thư đến</h4>
-                    <span class="bg-blue-100 text-blue-600 text-[10px] px-2 py-1 rounded-md font-bold animate-pulse">AUTO REFRESH</span>
-                </div>
-                <div id="messages-list" class="space-y-3 min-h-[200px]">
-                    <div class="p-12 text-center text-slate-300">
-                        <i class="fas fa-spinner fa-spin mb-4 text-2xl"></i>
-                        <p class="text-sm">Đang quét thư mới từ vệ tinh...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="dich-vu" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-3xl card-hover border border-slate-100 animate-in" style="animation-delay: 0.1s">
-                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-4 text-xl">
-                    <i class="fas fa-bolt"></i>
-                </div>
-                <h3 class="font-bold text-slate-800 mb-2 text-lg">Dịch vụ hiện có</h3>
-                <p class="text-slate-500 text-sm leading-relaxed">Hệ thống Email ảo tốc độ cao, tự động hủy để bảo vệ danh tính 24/7.</p>
-            </div>
-
-            <div id="api" class="bg-slate-900 p-6 rounded-3xl card-hover text-slate-300 animate-in" style="animation-delay: 0.2s">
-                <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-green-400 mb-4 text-xl">
-                    <i class="fas fa-code"></i>
-                </div>
-                <h3 class="font-bold text-white mb-2 text-lg">Giao diện API</h3>
-                <p class="text-slate-400 text-sm leading-relaxed font-mono">Status: <span class="text-orange-400">Locked</span><br>> Connecting to 5GSMS Cloud...</p>
-            </div>
-        </div>
-
-        <div id="bai-viet" class="bg-white rounded-3xl p-8 mb-8 card-hover border border-slate-100 animate-in" style="animation-delay: 0.3s">
-            <div class="flex items-center space-x-4 mb-6">
-                <div class="w-1 h-8 bg-blue-600 rounded-full"></div>
-                <h2 class="text-2xl font-black text-slate-800 italic uppercase">Hệ thống bảo mật 5GSMS</h2>
-            </div>
-            <div class="text-slate-600 text-sm leading-8 space-y-4">
-                <p>Hệ thống <strong>5GSMS</strong> được triển khai trên hạ tầng bảo mật đa lớp. Với việc sử dụng <strong>Firebase Authentication</strong>, mọi phiên làm việc đều được xác thực theo thời gian thực. Chúng tôi cam kết bảo mật tuyệt đối thông qua các thuật toán mã hóa đầu cuối và cơ chế phòng vệ chống khai thác dữ liệu tiên tiến nhất hiện nay.</p>
-            </div>
-        </div>
-
-        <div id="lien-he" class="bg-blue-600 rounded-3xl p-8 text-white text-center shadow-xl shadow-blue-100 animate-in" style="animation-delay: 0.4s">
-            <h3 class="font-bold mb-6 uppercase tracking-tighter">Trung tâm điều hành hỗ trợ</h3>
-            <div class="flex flex-wrap justify-center gap-6">
-                <a href="tel:0328509184" class="bg-white/10 px-6 py-3 rounded-2xl hover:bg-white/20 transition flex items-center">
-                    <i class="fas fa-phone mr-2"></i> 0328509184
-                </a>
-                <a href="mailto:hotrogoogie.vn@gmail.com" class="bg-white/10 px-6 py-3 rounded-2xl hover:bg-white/20 transition flex items-center">
-                    <i class="fas fa-envelope mr-2"></i> hotrogoogie.vn@gmail.com
-                </a>
-            </div>
-        </div>
+<nav>
+  <div class="ni">
+    <div class="logo"><div class="logo-ic"><i class="fas fa-paper-plane"></i></div><span>5GSMS</span></div>
+    <div class="links">
+      <a href="#top">Trang chủ</a><a href="#dich-vu">Dịch vụ</a><a href="#bao-mat">Bảo mật</a><a href="#lien-he">Liên hệ</a>
     </div>
+    <button class="btn-out" onclick="handleLogout()"><i class="fas fa-power-off"></i> THOÁT</button>
+  </div>
+</nav>
 
-    <script>
-        const API_URL = 'https://api.mail.tm';
-        let currentAccount = null;
+<div class="wrap">
+  <div class="card">
+    <div class="lbl">Địa chỉ Email định danh của bạn</div>
+    <div class="erow">
+      <input id="email-address" type="text" readonly class="einp" value="Đang kết nối hệ thống...">
+      <button class="btn-cp" id="btn-cp" onclick="copyEmail()"><i class="fas fa-copy"></i></button>
+    </div>
+    <div class="ih">
+      <div>
+        <div class="itl">Hộp thư đến</div>
+        <div class="tbadge"><i class="fas fa-circle" style="font-size:6px;color:#22c55e"></i> Tự động quét · còn <span id="cd">5</span>s</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span class="badge-a">AUTO REFRESH</span>
+        <button class="btn-rf" id="btn-rf" onclick="manualRefresh()"><i class="fas fa-rotate-right"></i> Làm mới</button>
+      </div>
+    </div>
+    <div id="ml"><div class="empty"><i class="fas fa-spinner fa-spin"></i><p>Đang quét thư mới...</p></div></div>
+  </div>
 
-        async function createAccount() {
-            const display = document.getElementById('email-address');
-            try {
-                const domainRes = await fetch(`${API_URL}/domains`);
-                const domains = await domainRes.json();
-                const domain = domains['hydra:member'][0].domain;
-                const address = `user${Math.random().toString(36).substring(7)}@${domain}`;
-                const password = 'password123';
+  <div id="dich-vu" class="g2">
+    <div class="card ch">
+      <div class="sic"><i class="fas fa-bolt"></i></div>
+      <div class="stl">Dịch vụ hiện có</div>
+      <p style="font-size:12px;color:#64748b;line-height:1.7">Hệ thống Email ảo tốc độ cao, tự động hủy để bảo vệ danh tính 24/7.</p>
+    </div>
+    <div class="card ch dark">
+      <div class="sic"><i class="fas fa-code"></i></div>
+      <h3 class="stl">Giao diện API</h3>
+      <div class="mono">Status: <span class="o">Locked</span><br>> Connecting to <span class="g">5GSMS Cloud</span>...<br>> <span style="opacity:.5">v2.0.0 · Secure</span></div>
+    </div>
+  </div>
 
-                const res = await fetch(`${API_URL}/accounts`, { 
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ address, password })
-                });
+  <div id="bao-mat" class="card ch">
+    <div class="sac"><div class="sac-bar"></div><h2>Hệ thống bảo mật 5GSMS</h2></div>
+    <p class="stxt">Hệ thống <strong>5GSMS</strong> được triển khai trên hạ tầng bảo mật đa lớp. Với <strong>Firebase Authentication</strong>, mọi phiên làm việc đều được xác thực theo thời gian thực, kết hợp mã hóa đầu cuối và cơ chế phòng vệ chống khai thác dữ liệu tiên tiến.</p>
+  </div>
 
-                if(!res.ok) throw new Error("Retry...");
-                const account = await res.json();
-                const tokenRes = await fetch(`${API_URL}/token`, { 
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ address, password })
-                });
-                const tokenData = await tokenRes.json();
+  <div id="lien-he" class="card cc">
+    <div class="ctl">Trung tâm điều hành hỗ trợ</div>
+    <div class="cls">
+      <a href="tel:0328509184" class="cl"><i class="fas fa-phone"></i> 0328509184</a>
+      <a href="mailto:hotrogoogie.vn@gmail.com" class="cl"><i class="fas fa-envelope"></i> hotrogoogie.vn@gmail.com</a>
+    </div>
+  </div>
+</div>
 
-                currentAccount = { ...account, token: tokenData.token };
-                display.value = address;
-                setInterval(fetchMessages, 5000);
-            } catch (e) { 
-                display.value = "Đang kết nối lại...";
-                setTimeout(createAccount, 3000);
-            }
-        }
+<div class="mo" id="mo" onclick="closeModal(event)">
+  <div class="md">
+    <div class="mh">
+      <div><div class="msub" id="msub">—</div><div class="mfrm" id="mfrm">—</div></div>
+      <button class="btn-x" onclick="closeMD()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="mdiv"></div>
+    <div class="mbody" id="mbody">Đang tải...</div>
+  </div>
+</div>
 
-        async function fetchMessages() {
-            if (!currentAccount) return;
-            try {
-                const res = await fetch(`${API_URL}/messages`, { headers: { 'Authorization': `Bearer ${currentAccount.token}` }});
-                const data = await res.json();
-                const messages = data['hydra:member'];
-                const list = document.getElementById('messages-list');
-                if (messages.length === 0) { list.innerHTML = '<div class="p-8 text-center text-slate-400 italic text-sm">Chưa có dữ liệu mới từ vệ tinh.</div>'; return; }
-                list.innerHTML = messages.map(msg => `
-                    <div class="p-4 bg-slate-50 rounded-2xl hover:bg-blue-50 transition cursor-pointer border-l-4 border-transparent hover:border-blue-500 animate-in">
-                        <div class="flex justify-between text-[10px] text-blue-600 font-bold mb-1 uppercase tracking-widest">
-                            <span class="truncate">${msg.from.address}</span>
-                        </div>
-                        <div class="text-sm font-bold text-slate-800">${msg.subject || '(Trống)'}</div>
-                        <div class="text-xs text-slate-400 mt-1 truncate">${msg.intro}</div>
-                    </div>
-                `).join('');
-            } catch (e) { }
-        }
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="tmsg">Đã sao chép!</span></div>
 
-        function copyEmail() { 
-            const input = document.getElementById('email-address');
-            input.select(); 
-            document.execCommand('copy');
-            // Hiệu ứng phản hồi nảy nhẹ khi copy
-            const btn = event.currentTarget;
-            btn.innerHTML = '<i class="fas fa-check"></i>';
-            setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i>'; }, 2000);
-        }
-        createAccount();
-    </script>
+<script>
+const API='https://api.mail.tm';
+let acc=null,fi=null,ci=null,cv=5;
+
+async function createAccount(){
+  const el=document.getElementById('email-address');
+  try{
+    const dr=await fetch(`${API}/domains`);
+    if(!dr.ok)throw 0;
+    const dom=(await dr.json())['hydra:member'][0].domain;
+    const addr=`user${Math.random().toString(36).slice(2,10)}@${dom}`;
+    const pw=Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2).toUpperCase()+'!9';
+    const ar=await fetch(`${API}/accounts`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({address:addr,password:pw})});
+    if(!ar.ok)throw 0;
+    const tr=await fetch(`${API}/token`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({address:addr,password:pw})});
+    if(!tr.ok)throw 0;
+    acc={addr,token:(await tr.json()).token};
+    el.value=addr;
+    if(fi)clearInterval(fi);if(ci)clearInterval(ci);
+    await fetchMsgs();startRefresh();
+  }catch(e){el.value='Đang kết nối lại...';setTimeout(createAccount,3000)}
+}
+
+function startRefresh(){
+  cv=5;document.getElementById('cd').textContent=cv;
+  ci=setInterval(()=>{cv--;document.getElementById('cd').textContent=cv;if(cv<=0)cv=5},1000);
+  fi=setInterval(async()=>{await fetchMsgs();cv=5},5000);
+}
+
+async function manualRefresh(){
+  const b=document.getElementById('btn-rf');b.classList.add('spinning');
+  await fetchMsgs();setTimeout(()=>b.classList.remove('spinning'),600);
+  showToast('Đã cập nhật hộp thư!','fa-rotate-right');
+}
+
+async function fetchMsgs(){
+  if(!acc)return;
+  try{
+    const r=await fetch(`${API}/messages`,{headers:{Authorization:`Bearer ${acc.token}`}});
+    if(!r.ok)return;
+    const msgs=(await r.json())['hydra:member'];
+    const ml=document.getElementById('ml');
+    if(!msgs?.length){ml.innerHTML='<div class="empty"><i class="fas fa-inbox"></i><p>Chưa có thư nào.</p></div>';return}
+    ml.innerHTML=msgs.map((m,i)=>`<div class="mi" style="animation-delay:${i*.05}s" onclick="openMsg('${m.id}','${esc(m.subject||"(Trống)")}','${esc(m.from.address)}')"><div class="mf">${esc(m.from.address)}</div><div class="ms">${esc(m.subject||'(Không có tiêu đề)')}</div><div class="mx">${esc(m.intro||'')}</div></div>`).join('');
+  }catch(e){}
+}
+
+async function openMsg(id,sub,from){
+  document.getElementById('msub').textContent=sub;
+  document.getElementById('mfrm').textContent='Từ: '+from;
+  document.getElementById('mbody').textContent='Đang tải...';
+  document.getElementById('mo').classList.add('open');
+  try{
+    const d=await(await fetch(`${API}/messages/${id}`,{headers:{Authorization:`Bearer ${acc.token}`}})).json();
+    document.getElementById('mbody').textContent=d.text||d.html?.replace(/<[^>]*>/g,'')||'(Không có nội dung)';
+  }catch(e){document.getElementById('mbody').textContent='Không thể tải nội dung.'}
+}
+
+function closeModal(e){if(e.target===document.getElementById('mo'))closeMD()}
+function closeMD(){document.getElementById('mo').classList.remove('open')}
+
+function copyEmail(){
+  const v=document.getElementById('email-address').value;
+  if(!v||v.includes('kết nối'))return;
+  navigator.clipboard.writeText(v).then(()=>{
+    const b=document.getElementById('btn-cp');
+    b.innerHTML='<i class="fas fa-check"></i>';b.style.background='#16a34a';
+    setTimeout(()=>{b.innerHTML='<i class="fas fa-copy"></i>';b.style.background=''},2000);
+    showToast('Đã sao chép email!');
+  }).catch(()=>{document.getElementById('email-address').select();document.execCommand('copy');showToast('Đã sao chép!')});
+}
+
+let tt;
+function showToast(msg,ic='fa-check-circle'){
+  const t=document.getElementById('toast');
+  document.getElementById('tmsg').textContent=msg;
+  t.querySelector('i').className=`fas ${ic}`;
+  t.classList.add('show');clearTimeout(tt);
+  tt=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+
+createAccount();
+</script>
 </body>
 </html>
