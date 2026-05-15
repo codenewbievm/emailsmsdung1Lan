@@ -7,74 +7,75 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
+<body class="bg-gradient-to-br from-blue-50 to-slate-100 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full border border-slate-100">
         <div class="text-center mb-8">
-            <div class="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+            <div class="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-200">
                 <i class="fas fa-paper-plane text-white text-2xl"></i>
             </div>
-            <h2 class="text-2xl font-bold text-gray-800">Chào mừng tới 5GSMS</h2>
-            <p class="text-gray-500">Vui lòng đăng nhập để sử dụng dịch vụ</p>
+            <h2 class="text-2xl font-black text-slate-800 uppercase tracking-tight">5GSMS</h2>
+            <p class="text-slate-400 text-sm mt-1">Vui lòng đăng nhập để sử dụng dịch vụ</p>
         </div>
 
         <div class="space-y-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" id="email" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="your-email@gmail.com">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Email</label>
+                <input type="email" id="email"
+                    class="w-full p-3.5 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm"
+                    placeholder="your-email@gmail.com">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Mật khẩu</label>
-                <input type="password" id="password" class="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="••••••••">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Mật khẩu</label>
+                <input type="password" id="password"
+                    class="w-full p-3.5 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm"
+                    placeholder="••••••••">
             </div>
-            <button id="btnLogin" class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold hover:bg-blue-700 transition">Đăng nhập</button>
-            <button id="btnSignup" class="w-full bg-gray-200 text-gray-700 p-3 rounded-lg font-bold hover:bg-gray-300 transition">Đăng ký tài khoản mới</button>
+            <button id="btnLogin"
+                class="w-full bg-blue-600 text-white p-3.5 rounded-2xl font-bold hover:bg-blue-700 active:scale-95 transition shadow-lg shadow-blue-200 text-sm">
+                <i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập
+            </button>
+            <button id="btnSignup"
+                class="w-full bg-slate-100 text-slate-600 p-3.5 rounded-2xl font-bold hover:bg-slate-200 active:scale-95 transition text-sm">
+                <i class="fas fa-user-plus mr-2"></i>Đăng ký tài khoản mới
+            </button>
         </div>
-        
+
         <p id="msg" class="mt-4 text-center text-sm font-medium"></p>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged }
+            from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // Sử dụng chung Config với index.html của bạn
-        const firebaseConfig = {
+        const auth = getAuth(initializeApp({
             apiKey: "AIzaSyDb1w0ZJxyTAY2usK6Agnr1ArQ_YIOGh-Y",
             authDomain: "tempmail-login-810b3.firebaseapp.com",
             projectId: "tempmail-login-810b3",
             appId: "1:821078583826:web:04cc70bfbbc36cba6dc6cb"
-        };
+        }));
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+        onAuthStateChanged(auth, u => { if (u) location.href = 'index.html'; });
 
-        // Nếu đã đăng nhập rồi thì tự chuyển sang index
-        onAuthStateChanged(auth, (user) => {
-            if (user) window.location.href = 'index.html';
-        });
+        const emailEl = document.getElementById('email');
+        const passEl  = document.getElementById('password');
+        const msgEl   = document.getElementById('msg');
 
-        const emailInput = document.getElementById('email');
-        const passInput = document.getElementById('password');
-        const msg = document.getElementById('msg');
+        function setMsg(text, ok) {
+            msgEl.textContent = text;
+            msgEl.className = 'mt-4 text-center text-sm font-medium ' + (ok ? 'text-green-500' : 'text-red-500');
+        }
 
-        // Hàm Đăng Nhập
         document.getElementById('btnLogin').onclick = () => {
-            signInWithEmailAndPassword(auth, emailInput.value, passInput.value)
-                .then(() => { window.location.href = 'index.html'; })
-                .catch(err => { 
-                    msg.innerText = "Lỗi: Sai tài khoản hoặc mật khẩu!";
-                    msg.className = "mt-4 text-center text-sm font-medium text-red-500";
-                });
+            signInWithEmailAndPassword(auth, emailEl.value, passEl.value)
+                .then(() => location.href = 'index.html')
+                .catch(() => setMsg('Sai tài khoản hoặc mật khẩu!', false));
         };
 
-        // Hàm Đăng Ký
         document.getElementById('btnSignup').onclick = () => {
-            createUserWithEmailAndPassword(auth, emailInput.value, passInput.value)
-                .then(() => { msg.innerText = "Đăng ký thành công! Đang đăng nhập..."; msg.className = "text-green-500"; })
-                .catch(err => { 
-                    msg.innerText = "Lỗi: Email đã tồn tại hoặc mật khẩu quá ngắn!";
-                    msg.className = "mt-4 text-center text-sm font-medium text-red-500";
-                });
+            createUserWithEmailAndPassword(auth, emailEl.value, passEl.value)
+                .then(() => setMsg('Đăng ký thành công! Đang đăng nhập...', true))
+                .catch(() => setMsg('Email đã tồn tại hoặc mật khẩu quá ngắn!', false));
         };
     </script>
 </body>
